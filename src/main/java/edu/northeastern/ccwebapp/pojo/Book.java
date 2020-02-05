@@ -3,8 +3,6 @@ package edu.northeastern.ccwebapp.pojo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -26,10 +24,6 @@ public class Book {
 
     @Column(name = "isbn")
     private String isbn;
-    
-    @OneToOne
-    @JoinColumn(name = "image_id")
-    private Image image;
 
     public String getId() {
         return id;
@@ -70,14 +64,5 @@ public class Book {
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
-
-	public Image getImage() {
-		return image;
-	}
-
-	public void setImage(Image image) {
-		this.image = image;
-	}
-    
     
 }
