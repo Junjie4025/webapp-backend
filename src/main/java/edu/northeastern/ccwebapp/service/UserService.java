@@ -41,7 +41,7 @@ public class UserService {
                     message = new ResponseEntity<>(responseMessage, HttpStatus.UNAUTHORIZED);
                 }
             } else {
-                responseMessage.setMessage("User does not exist");
+                responseMessage.setMessage("User does not exists");
                 message = new ResponseEntity<>(responseMessage, HttpStatus.UNAUTHORIZED);
             }
         } else {
