@@ -1,4 +1,8 @@
 pipeline {
+    environment {
+    registry = "akashkatakam/webapp-backend"
+    registryCredential = 'dockerhub'
+    }
     agent any
     stages {
         stage('Build') {
@@ -16,5 +20,22 @@ pipeline {
                 }
             }
         }
+        stage('Building image') {
+            steps{
+                script {
+                    commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
+                    dockerImage = docker.build registry + ":$commitId"
+                }
+            }
+        }
+        stage('Deploy Image') {
+            steps{
+                script {
+                    docker.withRegistry( '', registryCredential ) {
+                    dockerImage.push()
+                    }
+                }
+            }
         }
     }
+}
