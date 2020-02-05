@@ -5,7 +5,6 @@ import edu.northeastern.ccwebapp.pojo.User;
 import edu.northeastern.ccwebapp.repository.BookRepository;
 import edu.northeastern.ccwebapp.repository.UserRepository;
 import edu.northeastern.ccwebapp.service.BookService;
-import edu.northeastern.ccwebapp.service.ImageService;
 import edu.northeastern.ccwebapp.service.UserService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,9 +42,6 @@ public class CcwebappApplicationTests {
 
     @MockBean
     BookService bookService;
-
-    @MockBean
-    ImageService imageService;
 
     @MockBean
     BookRepository bookRepository;
