@@ -1,3 +1,4 @@
+commitId = ''
 pipeline {
     environment {
     registry = "akashkatakam/webapp-backend"
@@ -32,7 +33,8 @@ pipeline {
             steps{
                 script {
                     docker.withRegistry( '', registryCredential ) {
-                    dockerImage.push ":$commitId"
+                    dockerImage.push("${commitId}")
+                    dockerImage.push("latest")
                     }
                 }
             }
