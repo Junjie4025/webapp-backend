@@ -34,7 +34,7 @@ public class BookService {
             this.save(bookDetails);
             return new ResponseEntity<>(bookDetails, HttpStatus.CREATED);
         } else {
-            responseMessage.setMessage("Invalid Title/ Author or Invalid JSON...");
+            responseMessage.setMessage("Invalid Title/ Author or Invalid JSON");
             return new ResponseEntity<>(responseMessage, HttpStatus.BAD_REQUEST);
         }
     }
