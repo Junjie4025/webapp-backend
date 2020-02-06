@@ -49,11 +49,11 @@ public class CcwebappApplicationTests {
     @Test
     public void emailChecker() {
         User user = new User();
-        user.setUsername("qwert@gmail.com");
+        user.setUsername("qwert@gmail1.com");
         user.setPassword("4ar@@@@@@");
 
         Mockito.when(userService.findByUserName(Mockito.anyString())).thenReturn(user);
-        String testName = userService.findByUserName("qwert@gmail.com").getUsername();
-        Assert.assertEquals("qwert@gmail.com", testName);
+        String testName = userService.findByUserName("qwert@gmail1.com").getUsername();
+        Assert.assertEquals("qwert@gmail1.com", testName);
     }
 }
