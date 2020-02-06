@@ -14,6 +14,7 @@ public class BookController {
 
     private final BookService bookService;
     private final UserService userService;
+    private final String test = "";
 
     public BookController(BookService bookService, UserService userService) {
         this.bookService = bookService;
@@ -30,18 +31,12 @@ public class BookController {
 
     @GetMapping(value = "/book", produces = "application/json")
     public ResponseEntity<?> returnBookDetails(HttpServletRequest request) {
-        ResponseEntity<?> responseEntity = userService.resultOfUserStatus(request);
-        HttpStatus status = responseEntity.getStatusCode();
-        if (status.equals(HttpStatus.OK)) return bookService.getBooks();
-        else return responseEntity;
+        return bookService.getBooks();
     }
 
     @GetMapping(value = "/book/{id}", produces = "application/json")
     public ResponseEntity<?> getBookById(@PathVariable String id, HttpServletRequest request) {
-        ResponseEntity<?> responseEntity = userService.resultOfUserStatus(request);
-        HttpStatus status = responseEntity.getStatusCode();
-        if (status.equals(HttpStatus.OK)) return bookService.getBook(id);
-        else return responseEntity;
+        return bookService.getBook(id);
     }
 
     @PutMapping(value = "/book", produces = "application/json", consumes = "application/json")

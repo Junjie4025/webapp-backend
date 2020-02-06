@@ -41,7 +41,7 @@ public class UserService {
                     message = new ResponseEntity<>(responseMessage, HttpStatus.UNAUTHORIZED);
                 }
             } else {
-                responseMessage.setMessage("User does not exist");
+                responseMessage.setMessage("User does not exists");
                 message = new ResponseEntity<>(responseMessage, HttpStatus.UNAUTHORIZED);
             }
         } else {
@@ -70,7 +70,7 @@ public class UserService {
         regExpression = "^[a-zA-Z0-9!$#@%^&_*]\\w{7,18}$";
         //"^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d-]{8,}$";
         /*The password's first character must be a letter, it must contain at least 8 characters and
-        no more than 15 characters and no characters other than letters,
+        no more than 15 characters and no characters other than letters,asd
         numbers and the underscore may be used*/
 
         pattern = Pattern.compile(regExpression);
