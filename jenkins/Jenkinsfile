@@ -23,8 +23,8 @@ pipeline {
         stage('Building image') {
             steps{
                 script {
-                    commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
-                   def  dockerImage = docker.build registry
+                    def commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
+                   def  dockerImage = docker.build(registry)
                 }
             }
         }
@@ -32,7 +32,7 @@ pipeline {
             steps{
                 script {
                     docker.withRegistry( '', registryCredential ) {
-                    dockerImage.push "${commitId}"
+                    dockerImage.push ":$commitId"
                     }
                 }
             }
