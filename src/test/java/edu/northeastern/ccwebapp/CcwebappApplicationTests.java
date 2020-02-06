@@ -1,94 +1,49 @@
 package edu.northeastern.ccwebapp;
 
-import edu.northeastern.ccwebapp.pojo.Book;
+import edu.northeastern.ccwebapp.controller.BookController;
 import edu.northeastern.ccwebapp.pojo.User;
 import edu.northeastern.ccwebapp.repository.BookRepository;
 import edu.northeastern.ccwebapp.repository.UserRepository;
 import edu.northeastern.ccwebapp.service.BookService;
 import edu.northeastern.ccwebapp.service.UserService;
-import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebMvcTest(value = BookController.class, secure = false)
 public class CcwebappApplicationTests {
-	//User details
-	private String email = "test@gmail.com";
-	//Book Details
-	private String title = "Networks and cloud computing";
-	private String isbn = "786-1289213";
-	private String author = "Barrie Sosinsky";
-	private int quantity = 10;
-	private UUID uuid = UUID.randomUUID();
 
-	private User user;
+    private User user;
+    @Autowired
+    private MockMvc mockMvc;
+    @MockBean
+    UserService userService;
 
-	@InjectMocks
-	UserService userService;
+    @Mock
+    UserRepository userRepository;
 
-	@Mock
-	UserRepository userRepository;
+    @MockBean
+    BookService bookService;
 
-	@InjectMocks
-	BookService bookService;
+    @MockBean
+    BookRepository bookRepository;
 
-	@Mock
-	BookRepository bookRepository;
+    @Test
+    public void emailChecker() {
+        User user = new User();
+        user.setUsername("qwert@gmail.com");
+        user.setPassword("4ar@@@@@@");
 
-	@Before
-	public void setup() {
-		MockitoAnnotations.initMocks(this);
-		createUser();
-		findUser();
-		createBook();
-	}
-
-	private void createUser() {
-		user = new User();
-		String password = "12345678";
-		user.setUsername(email);
-		user.setPassword(password);
-		when(userRepository.save(user)).thenReturn(user);
-	}
-
-	private void findUser() {
-		when(userService.findByUserName(email)).thenReturn(user);
-	}
-
-	private void createBook() {
-		Book book = new Book();
-		book.setQuantity(quantity);
-		book.setIsbn(isbn);
-		book.setAuthor(author);
-		book.setTitle(title);
-		book.setId(uuid.toString());
-		when(bookService.getBookById(uuid.toString())).thenReturn(book);
-	}
-
-	@Test
-	public void checkBookDetails() {
-		Book receivedBook = bookService.getBookById(uuid.toString());
-		assertEquals(receivedBook.getAuthor(), author);
-		assertEquals(receivedBook.getTitle(), title);
-		assertEquals(receivedBook.getIsbn(), isbn);
-		assertEquals(receivedBook.getQuantity(), quantity);
-	}
-
-	@Test
-	public void registerUserDetails() {
-		User receivedUser = userService.findByUserName(email);
-		assertEquals(receivedUser.getUsername(), email);
-	}
-
+        Mockito.when(userService.findByUserName(Mockito.anyString())).thenReturn(user);
+        String testName = userService.findByUserName("qwert@gmail.com").getUsername();
+        Assert.assertEquals("qwert@gmail.com", testName);
+    }
 }
