@@ -14,6 +14,7 @@ public class BookController {
 
     private final BookService bookService;
     private final UserService userService;
+    private final String test = "";
 
     public BookController(BookService bookService, UserService userService) {
         this.bookService = bookService;
