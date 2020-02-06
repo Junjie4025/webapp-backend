@@ -1,7 +1,6 @@
-commit_id = ''
-docker_image = ''
 node {
     def docker_image
+    def commit_id
         stage('Build') {
             sh 'mvn -B -DskipTests clean package'
         }
@@ -12,11 +11,13 @@ node {
             script {
                 commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
                 docker_image = docker.build("${env.registry}")
+                echo "$commit_id"
             }
         }
         stage('Pushing image') {
             script {
                     docker.withRegistry('', "${env.docker_creds}" ) {
+                    echo "$commit_id"
                     docker_image.push("${commit_id}")
                     docker_image.push("latest")
                 }
