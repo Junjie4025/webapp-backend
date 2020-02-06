@@ -1,7 +1,7 @@
 node {
     def docker_image
     def commit_id
-        stage('cloning repo') {
+        stage('Clone Repository') {
             checkout scm
         }
         stage('Build') {
