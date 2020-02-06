@@ -17,19 +17,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.UUID;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebMvcTest(value = BookController.class, secure = false)
 public class CcwebappApplicationTests {
-    //User details
-    private String email = "test@gmail.com";
-    //Book Details
-    private String title = "Networks and cloud computing";
-    private String isbn = "786-1289213";
-    private String author = "Barrie Sosinsky";
-    private int quantity = 10;
-    private UUID uuid = UUID.randomUUID();
 
     private User user;
     @Autowired
