@@ -1,6 +1,9 @@
 node {
     def docker_image
     def commit_id
+        stage('cloning repo') {
+            checkout scm
+        }
         stage('Build') {
             sh 'mvn -B -DskipTests clean package'
         }
