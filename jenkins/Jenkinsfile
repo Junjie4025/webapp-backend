@@ -1,43 +1,25 @@
-commitId = ''
-pipeline {
-    environment {
-    registry = "akashkatakam/webapp-backend"
-    registryCredential = 'dockerhub'
-    }
-    agent any
-    stages {
+commit_id = ''
+docker_image = ''
+node {
+    def docker_image
         stage('Build') {
-            steps {
-                sh 'mvn -B -DskipTests clean package'
-            }
+            sh 'mvn -B -DskipTests clean package'
         }
         stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
+            sh 'mvn test'
         }
         stage('Building image') {
-            steps{
-                script {
-                    def commitId = sh(returnStdout: true, script: 'git rev-parse HEAD')
-                   def  dockerImage = docker.build(registry)
-                }
+            script {
+                commit_id = sh(returnStdout: true, script: 'git rev-parse HEAD')
+                docker_image = docker.build("${env.registry}")
             }
         }
-        stage('Deploy Image') {
-            steps{
-                script {
-                    docker.withRegistry( '', registryCredential ) {
-                    dockerImage.push("${commitId}")
+        stage('Pushing image') {
+            script {
+                    docker.withRegistry('', "${env.docker_creds}" ) {
+                    dockerImage.push("${commit_id}")
                     dockerImage.push("latest")
-                    }
                 }
             }
         }
     }
-}
