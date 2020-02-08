@@ -27,7 +27,6 @@ public class BookController {
         if (status.equals(HttpStatus.OK)) return bookService.addBookDetails(book);
         else return responseEntity;
     }
-
     @GetMapping(value = "/book", produces = "application/json")
     public ResponseEntity<?> returnBookDetails(HttpServletRequest request) {
         return bookService.getBooks();
