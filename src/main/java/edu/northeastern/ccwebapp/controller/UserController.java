@@ -27,6 +27,12 @@ public class UserController {
         return userService.checkUserStatus(headerResp);
     }
 
+    @GetMapping(value = "/test")
+    public String test(HttpServletRequest req) {
+        return "Test succeed!";
+    }
+
+
     @PostMapping(value = "/user/register", produces = "application/json", consumes = "application/json")
     public ResponseEntity registerUser(@RequestBody User user) {
         return userService.saveUser(user);
