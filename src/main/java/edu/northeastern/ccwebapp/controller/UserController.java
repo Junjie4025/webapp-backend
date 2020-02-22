@@ -1,8 +1,10 @@
 package edu.northeastern.ccwebapp.controller;
 
+import com.timgroup.statsd.StatsDClient;
 import edu.northeastern.ccwebapp.pojo.User;
 import edu.northeastern.ccwebapp.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,17 +16,29 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final StatsDClient stats;
 
-    public UserController(UserService userService) {
+    private final UserService userService;
+    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
+
+    public UserController(UserService userService, StatsDClient stats) {
         this.userService = userService;
+        this.stats = stats;
     }
 
     @GetMapping(value = "/", produces = "application/json")
     public ResponseEntity basicAuth(HttpServletRequest req) {
+        stats.incrementCounter("endpoint.getuser.http.get");
         String headerResp = req.getHeader("Authorization");
+        logger.info("You are in get user controller api");
         return userService.checkUserStatus(headerResp);
+    }
+
+    @PostMapping(value = "/user/register", produces = "application/json", consumes = "application/json")
+    public ResponseEntity registerUser(@RequestBody User user) {
+        stats.incrementCounter("endpoint.createuser.http.post");
+        logger.info("You are in post user controller api");
+        return userService.saveUser(user);
     }
 
     @GetMapping(value = "/test")
@@ -32,9 +46,10 @@ public class UserController {
         return "Test succeed!";
     }
 
-
-    @PostMapping(value = "/user/register", produces = "application/json", consumes = "application/json")
-    public ResponseEntity registerUser(@RequestBody User user) {
-        return userService.saveUser(user);
+    @PostMapping(value = "/reset", produces = "application/json", consumes = "application/json")
+    public ResponseEntity resetPassword(@RequestBody User user) {
+        stats.incrementCounter("endpoint.user.password.reset");
+        logger.info("In user controller reset password method");
+        return userService.resetPassword(user);
     }
 }
