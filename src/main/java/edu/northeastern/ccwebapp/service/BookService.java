@@ -2,7 +2,9 @@ package edu.northeastern.ccwebapp.service;
 
 import edu.northeastern.ccwebapp.Util.ResponseMessage;
 import edu.northeastern.ccwebapp.pojo.Book;
+import edu.northeastern.ccwebapp.pojo.RedisBook;
 import edu.northeastern.ccwebapp.repository.BookRepository;
+import edu.northeastern.ccwebapp.repository.RedisBookRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -16,10 +18,12 @@ import java.util.UUID;
 public class BookService {
 
     private BookRepository bookRepository;
+    private RedisBookRepository redisBookRepository;
     private final static Logger logger = LogManager.getLogger(BookService.class);
 
-    public BookService(BookRepository bookRepository) {
+    public BookService(BookRepository bookRepository, RedisBookRepository redisBookRepository) {
         this.bookRepository = bookRepository;
+        this.redisBookRepository = redisBookRepository;
 
     }
 
@@ -74,7 +78,10 @@ public class BookService {
             currentBook.setAuthor(book.getAuthor());
             currentBook.setIsbn(book.getIsbn());
             currentBook.setQuantity(book.getQuantity());
-            save(currentBook);
+
+            redisBookRepository.deleteById(currentBook.getId());
+
+            this.save(currentBook);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             responseMessage.setMessage("Book with id " + book.getId() + " not found");
@@ -84,11 +91,34 @@ public class BookService {
     }
 
     public Book getBookById(String id) {
-        return bookRepository.findById(id);
+
+        RedisBook redisBook = redisBookRepository.findById(id).orElse(null);
+
+        if(redisBook != null) {
+            Book book = new Book();
+            book.setId(redisBook.getId());
+            book.setAuthor(redisBook.getAuthor());
+            book.setIsbn(redisBook.getIsbn());
+            book.setQuantity(redisBook.getQuantity());
+            book.setTitle(redisBook.getTitle());
+            logger.warn("Get book from redis!");
+            return book;
+        } else {
+            logger.warn("Get book from database!");
+            return bookRepository.findById(id);
+        }
     }
 
     public void save(Book book) {
         bookRepository.save(book);
+
+        RedisBook redisBook = new RedisBook();
+        redisBook.setId(book.getId());
+        redisBook.setAuthor(book.getAuthor());
+        redisBook.setIsbn(book.getIsbn());
+        redisBook.setQuantity(book.getQuantity());
+        redisBook.setTitle(book.getTitle());
+        redisBookRepository.save(redisBook);
     }
 
     public ResponseEntity<?> deleteBook(String id) {
@@ -105,6 +135,10 @@ public class BookService {
     }
 
     private void deleteBookById(String id) {
+
+        RedisBook redisBook = redisBookRepository.findById(id).orElse(null);
+        if(redisBook != null) redisBookRepository.deleteById(redisBook.getId());
+
         bookRepository.deleteById(id);
     }
 
