@@ -17,7 +17,7 @@ public class BookController {
     private final BookService bookService;
     private final UserService userService;
 
-    private static final Counter getBooksCounter = Metrics.counter("get_books_api_counter");
+    private static final Counter getBooksCounter = Metrics.counter("get_book_api_counter");
     private static final Counter postBookCounter = Metrics.counter("post_book_api_counter");
     private static final Counter getBookWithIdCounter = Metrics.counter("get_book_with_id_api_counter");
     private static final Counter putBookCounter = Metrics.counter("put_book_api_counter");
