@@ -1,6 +1,6 @@
     node {
     def dockerImage
-    def githubCredential = '09445975-bb17-487e-bf6e-bd4a27cc7ab4'
+    def githubCredential = '87ce9999-e275-491a-b546-adacbf5ac033'
     def commit_id
 	
 	stage('Clone repository') {
