@@ -35,8 +35,6 @@
             echo "${BUILD_NUMBER}"
             sh "pwd"
             sh "ls"
-            sh "cd charts"
-            sh "ls"
             updatedVersion= nextVersionFromGit("${env.releaseType}")
             echo "UpdatedVersion"+ updatedVersion
             sh "yq r ./backend/Chart.yaml version"
@@ -50,7 +48,7 @@
     }
 }
 def nextVersionFromGit(scope) {
-        def latestVersion = sh returnStdout: true, script: 'yq r ./backend/Chart.yaml version'
+        def latestVersion = sh (returnStdout: true, script: 'yq r ./backend/Chart.yaml version')
         def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
         def nextVersion
         switch (scope) {
