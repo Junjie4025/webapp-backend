@@ -39,10 +39,10 @@
             sh "ls"
             updatedVersion= nextVersionFromGit("${env.releaseType}")
             echo "UpdatedVersion"+ updatedVersion
-            sh "yq r ./Chart.yaml version"
-            sh "yq w -i ./Chart.yaml 'version' ${updatedVersion}"
-            sh "yq r ./Chart.yaml version"
-            sh "yq w -i ./values.yaml 'imageBackend' ${env.registry}:$commit_id"
+            sh "yq r ./backend/Chart.yaml version"
+            sh "yq w -i ./backend/Chart.yaml 'version' ${updatedVersion}"
+            sh "yq r ./backend/Chart.yaml version"
+            sh "yq w -i ./backend/values.yaml 'imageBackend' ${env.registry}:$commit_id"
             sh('git add --all')
             sh "git commit -m 'Version bump ${updatedVersion}'"
             sh ('git push origin')
@@ -50,7 +50,7 @@
     }
 }
 def nextVersionFromGit(scope) {
-        def latestVersion = sh returnStdout: true, script: 'yq r ./Chart.yaml version'
+        def latestVersion = sh returnStdout: true, script: 'yq r ./backend/Chart.yaml version'
         def (major, minor, patch) = latestVersion.tokenize('.').collect { it.toInteger() }
         def nextVersion
         switch (scope) {
