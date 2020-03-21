@@ -44,7 +44,7 @@
             sh('git add --all')
             sh "git commit -m 'Version bump ${updatedVersion}'"
             withCredentials([usernamePassword(credentialsId: githubCredential, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-            sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Junjie4025/helm-charts.git jenkins_test')}g
+            sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/Junjie4025/helm-charts.git jenkins_test')}
         }
     }
 }
